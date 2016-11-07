@@ -1,11 +1,11 @@
-import os
+import os, struct
 import numpy as np
-
+from data_config import data_dir
 
 def iris():
     iris_name = {'Iris-setosa': 0, 'Iris-versicolor': 1, 'Iris-virginica': 2}
     data = [];
-    indir = os.path.abspath('../dataset/iris')
+    indir = os.path.join(data_dir, 'iris')
 
     row = 0
     for line in open(os.path.join(indir, 'iris.data')):
@@ -19,7 +19,7 @@ def iris():
 
 def wine():
     data = [];
-    indir = os.path.abspath('../dataset/wine')
+    indir = os.path.join(data_dir, 'wine')
     row = 0
     for line in open(os.path.join(indir, 'wine.data')):
         src = line.split(',')
@@ -36,7 +36,7 @@ def car():
     result_label = {'unacc': 0, 'acc': 1, 'good': 2, 'vgood': 3}
 
     data = [];
-    indir = os.path.abspath('../dataset/car')
+    indir = os.path.join(data_dir, 'car')
     row = 0
     for line in open(os.path.join(indir, 'car.data')):
         src = line.split(',')
@@ -64,3 +64,43 @@ def car():
 
 def adult():
     return [1,2,2,2,2,4]
+
+
+def mnist(dataset="training", digits=np.arange(10)):
+    from array import array as pyarray
+    """
+    Loads MNIST files into 3D numpy arrays
+
+    Adapted from: http://abel.ee.ucla.edu/cvxopt/_downloads/mnist.py
+    """
+    path = os.path.join(data_dir, 'mnist')
+
+    if dataset == "training":
+        fname_img = os.path.join(path, 'train-images.idx3-ubyte')
+        fname_lbl = os.path.join(path, 'train-labels.idx1-ubyte')
+    elif dataset == "testing":
+        fname_img = os.path.join(path, 't10k-images.idx3-ubyte')
+        fname_lbl = os.path.join(path, 't10k-labels.idx1-ubyte')
+    else:
+        raise ValueError("dataset must be 'testing' or 'training'")
+
+    flbl = open(fname_lbl, 'rb')
+    magic_nr, size = struct.unpack(">II", flbl.read(8))
+    lbl = pyarray("b", flbl.read())
+    flbl.close()
+
+    fimg = open(fname_img, 'rb')
+    magic_nr, size, rows, cols = struct.unpack(">IIII", fimg.read(16))
+    img = pyarray("B", fimg.read())
+    fimg.close()
+
+    ind = [ k for k in range(size) if lbl[k] in digits ]
+    N = len(ind)
+
+    images = np.zeros((N, rows, cols), dtype=np.uint8)
+    labels = np.zeros((N, 1), dtype=np.int8)
+    for i in range(len(ind)):
+        images[i] = np.array(img[ ind[i]*rows*cols : (ind[i]+1)*rows*cols ]).reshape((rows, cols))
+        labels[i] = lbl[ind[i]]
+
+    return images, labels

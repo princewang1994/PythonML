@@ -1,10 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
 # data generator
 
 
-class DataSimulor:
+class DataSimulor(object):
 
 	def __init__(self):
 		pass
