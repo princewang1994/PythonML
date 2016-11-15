@@ -33,8 +33,8 @@ class DataSimulor:
 	def get_data(f, xmin=0, xmax=10, space=0.01, lamda=0.1):
 		x = np.arange(xmin, xmax, space)
 		y = f(x)
-		factor = 2 * lamda * np.random.random(x.size) - lamda + 1
-		return x, y*factor
+		factor = np.random.normal(0, 10 * lamda, x.size)
+		return x, y + factor
 
 	'''
 		data: numpy array stand for data matrix without label

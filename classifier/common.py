@@ -1,8 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-# data generator
+import pandas as pd
 
 
+'''
+	data generator
+'''
 class DataSimulor(object):
 
 	def __init__(self):
@@ -18,13 +21,11 @@ class DataSimulor(object):
 	def get_data(f, xmin=0, xmax=10, space=0.01, lamda=0.1):
 		x = np.arange(xmin, xmax, space)
 		y = f(x)
-		factor = 2 * lamda * np.random.random(x.size) - lamda + 1
-		return x, y * factor
+		factor = np.random.normal(0, lamda, x.size)
+		return x, y + factor
 
+import pandas as pd
 
-class Model:
-	def __init__(self):
-		pass
 
 
 class Classifier:
@@ -36,6 +37,9 @@ class Classifier:
 		pass
 
 	def classify(self, x, y):
+		pass
+
+	def predict(self, x, y):
 		pass
 
 	def precision(self):

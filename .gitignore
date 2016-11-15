@@ -1,3 +1,6 @@
+#ignore test.txt as test
+test.txt
+
 #PyCharm
 .idea/
 
